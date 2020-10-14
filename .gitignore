@@ -25,3 +25,4 @@ resilient_circuits_lockfile
 *.bak
 
 .project
+.pydevproject
