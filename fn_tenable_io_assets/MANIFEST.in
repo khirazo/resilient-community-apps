@@ -1,0 +1,9 @@
+include README.md
+include Dockerfile
+include entrypoint.sh
+include fn_tenable_io_assets/util/*
+include fn_tenable_io_assets/LICENSE
+include doc/*.md
+include doc/screenshots/*
+
+exclude *.bak
