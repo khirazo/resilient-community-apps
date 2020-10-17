@@ -4,9 +4,11 @@
 
 import logging
 from resilient_circuits import ResilientComponent, function, handler, StatusMessage, FunctionResult, FunctionError
+from resilient_lib import RequestsCommon
+from fn_tenable_io_assets.util.tenable_io import call_tenable_io
+from pprint import pformat
 
 PACKAGE_NAME = "fn_tenable_io_assets"
-
 
 class FunctionComponent(ResilientComponent):
     """Component that implements Resilient function 'tenable_io_assets''"""
@@ -23,11 +25,24 @@ class FunctionComponent(ResilientComponent):
 
     @function("tenable_io_assets")
     def _tenable_io_assets_function(self, event, *args, **kwargs):
-        """Function: Function for multiple operations:
-- Gets Asset data from Tenable.io.
-- Invoke Tenable.io Vulnerability scan for the Asset(s)."""
+        """
+        Function: Function for multiple operations:
+            - Gets Asset data from Tenable.io.
+            - Invoke Tenable.io Vulnerability scan for the Asset(s).
+        in:
+            tio_operation_type: 'search', 'scan', 'scan_status'
+            tio_ip_addr: an IP address or comma separated addresses
+            tio_severity: comma separated list of [ None, Low, Medium, High, Critical ] combination
+            tio_asset_age: asset age in days to retrieve
+            tio_scan_name: scan name to override the default scan name in app.config
+        out: results dict
+            state: Success, Failed
+            reason: Failed reason
+            content: Reformatted Tenable.io Asset array of dict:
+                Asset Keys = [ 'id', 'asset_url', 'interfaces', 'hostnames', 'severities',
+                'last_seen', 'agent_name' ]
+        """
         try:
-
             # Get the wf_instance_id of the workflow this Function was called in
             wf_instance_id = event.message["workflow_instance"]["workflow_instance_id"]
 
@@ -37,27 +52,38 @@ class FunctionComponent(ResilientComponent):
             incident_id = kwargs.get("incident_id")  # number
             artifact_id = kwargs.get("artifact_id")  # number
             tio_operation_type = kwargs.get("tio_operation_type")  # text
-            tio_operation_param1 = kwargs.get("tio_operation_param1")  # text
-            tio_operation_param2 = kwargs.get("tio_operation_param2")  # text
+            tio_ip_addr = kwargs.get("tio_ip_addr")  # text
+            tio_severity = kwargs.get("tio_severity")  # text
+            tio_asset_age = kwargs.get("tio_asset_age")  # number
+            tio_scan_name = kwargs.get("tio_scan_name")  # text
 
             log = logging.getLogger(__name__)
+            # debug purpose (note: this exposes access_key and secret_key in the log)
+            log.debug("parameters from app.config:")
+            log.debug(pformat(self.options))
+            
             log.info("incident_id: %s", incident_id)
             log.info("artifact_id: %s", artifact_id)
             log.info("tio_operation_type: %s", tio_operation_type)
-            log.info("tio_operation_param1: %s", tio_operation_param1)
-            log.info("tio_operation_param2: %s", tio_operation_param2)
+            log.info("tio_ip_addr: %s", tio_ip_addr)
+            log.info("tio_severity: %s", tio_severity)
+            log.info("tio_asset_age: %s", tio_asset_age)
+            log.info("tio_scan_name: %s", tio_scan_name)
 
-            ##############################################
-            # PUT YOUR FUNCTION IMPLEMENTATION CODE HERE #
-            ##############################################
-
+            # create RequestsCommon
+            req_common = RequestsCommon(opts=self.opts, function_opts=self.options)
+            results = call_tenable_io(self.options, req_common, tio_operation_type,
+                                      ip_addr=tio_ip_addr, severity=tio_severity,
+                                      asset_age=tio_asset_age, scan_name=tio_scan_name) 
             yield StatusMessage("Finished 'tenable_io_assets' that was running in workflow '{0}'".format(wf_instance_id))
 
-            results = {
-                "content": "xyz"
-            }
+            if results.get('state') != 'Success':
+                raise ConnectionError("Tenable.io Assets could not be retrieved: {0}".format(results.get('reason')))
+            else:
+                yield StatusMessage("{0} assets were returned from Tenable.io".format(results.get('size')))
 
             # Produce a FunctionResult with the results
             yield FunctionResult(results)
-        except Exception:
-            yield FunctionError()
+
+        except Exception as e:
+            yield FunctionError(e)
