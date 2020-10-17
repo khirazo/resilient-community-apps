@@ -20,7 +20,7 @@ def call_tenable_io(config, req_common, tio_ope, **kwargs):
         config: config dict
         req_common: resilient lib RequestCommon
         tio_ope: operation types:
-            lookup: search assets with vulnerabilities by IP *or* by severity
+            search: search assets with vulnerabilities by IP *or* by severity
             scan: ask Tenable.io to initiate a scan (for the IP addresses or default targets when omitted)
             scan_status: check scan status
         ip_addr: one ore more comma separated ip address(es)
@@ -29,7 +29,8 @@ def call_tenable_io(config, req_common, tio_ope, **kwargs):
         scan_name: scan name
     out: results dict
         state: Success, Failed
-        content: assets for lookup, uuid for scan
+        content: assets for search, uuid for scan
+        size: number of assets returned
         reason: Failed reason
     """
     try:
@@ -43,7 +44,7 @@ def call_tenable_io(config, req_common, tio_ope, **kwargs):
                         url="https://"+config.get('host_name'), retries=TIO_RETRIES, backoff=TIO_BACKOFF,
                         proxies=req_common.get_proxies())
 
-        if tio_ope.lower() == 'lookup':
+        if tio_ope.lower() == 'search':
             filters = []
             if ip_addr:
                 filters.append('host.target')
@@ -57,7 +58,8 @@ def call_tenable_io(config, req_common, tio_ope, **kwargs):
             resp = tio.workbenches.vuln_assets(filters, filter_type="and", age=asset_age)
             return {
                 'state': 'Success',
-                'content': reformat_assets(config, resp)
+                'content': reformat_assets(config, resp),
+                'size': len(resp)
             }
         elif tio_ope.lower() == 'scan':
             scan_name = scan_name if scan_name else config.get('default_scan_name')
@@ -115,7 +117,7 @@ def get_scan_id_from_name(tenable_io, name):
 def reformat_assets(config, assets):
     '''
     in: Tenable.io Assets API output
-    out: Reformatted Tenable.io Asset
+    out: Reformatted Tenable.io Asset array of dict
         Asset Keys = [ 'id', 'asset_url', 'interfaces', 'hostnames', 'severities', 'last_seen', 'agent_name' ]
     '''
     try:
