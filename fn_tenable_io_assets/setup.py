@@ -23,14 +23,19 @@ def snake_to_camel(word):
 setup(
     name="fn_tenable_io_assets",
     version="1.0.0",
-    license="<<insert here>>",
-    author="<<your name here>>",
-    author_email="you@example.com",
-    url="<<your company url>>",
+    license="MIT",
+    author="khirazo",
+    author_email="khrz@jp.ibm.com",
+    url="https://ibm.biz/resilientcommunity",
     description="Resilient Circuits Components for 'fn_tenable_io_assets'",
-    long_description="""Resilient Circuits Components for 'fn_tenable_io_assets'""",
+    long_description="""Resilient Circuits Components for 'fn_tenable_io_assets'
+        You can search Tenable.io assets by IP address from Resilient incident/artifact
+        You can also launch a pre-defined Tenable.io scan from Resilient incident/artifact
+        """,
     install_requires=[
-        "resilient_circuits>=30.0.0"
+        "resilient_circuits>=30.0.0",
+        "resilient_lib",
+        "pytenable"
     ],
     packages=find_packages(),
     include_package_data=True,
