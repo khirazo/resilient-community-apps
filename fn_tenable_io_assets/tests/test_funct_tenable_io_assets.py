@@ -3,7 +3,7 @@
 
 import pytest
 from resilient_lib import RequestsCommon
-from fn_tenable_io_assets.util.tenable_io import call_tenable_io
+from fn_tenable_io_assets.util.tenable_io_lib import call_tenable_io
 from pprint import pprint
 
 PACKAGE_NAME = "fn_tenable_io_assets"
