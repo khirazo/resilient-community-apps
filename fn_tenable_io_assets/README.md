@@ -38,7 +38,7 @@ For more information, please see the [User Guide](./doc/README.md).
 * To set up an Integration Server see: [ibm.biz/res-int-server-guide](https://ibm.biz/res-int-server-guide)
   
 * Tenable.io
-  * The integration invokes Tenable.io REST API via pyTenable librarly
+  * The integration invokes Tenable.io REST API via pyTenable library
 
   * Used functions are:
 
@@ -101,7 +101,7 @@ For more information, please see the [User Guide](./doc/README.md).
   ```
 
 ### Custom Layouts
-* You'll need to add a data table **Tenable.io Assets** (`tenable_io_assets`) to any of your existing tab or newly created tab:
+* You'll need to add the data table **Tenable.io Assets** (`tenable_io_assets`) to any of your existing tab or newly created tab:
 
  ![screenshot: custom_layouts](./doc/screenshots/custom_layouts.png)
 
