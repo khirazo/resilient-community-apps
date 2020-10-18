@@ -20,7 +20,7 @@ resilient_circuits_lockfile
 *.log.*
 *~
 *.egg-info
-*.tar.gz
+#*.tar.gz
 *.pytest_cache
 *.bak
 
