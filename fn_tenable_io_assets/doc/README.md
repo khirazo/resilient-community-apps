@@ -15,7 +15,7 @@
   * IP Addresses (comma separated list, or a single value)
   * Severities (comma separated list of `Info`, `Low`, `Medium`, `High`, `Critical` combination)
 
-  Returned values are stored in a table
+  Returned values are stored in the [Data Table - Tenable.io Assets]()
 
 * Launch pre-defined **Tenable.io scan** from the incident **Action** menu:
 
@@ -163,12 +163,12 @@ tenable_io_assets
 #### Columns:
 | Column Name | API Access Name | Type | Tooltip |
 | ----------- | --------------- | ---- | ------- |
-| Agent name | `agent_name` | `text` | Tenable.io agent name |
-| Hostnames | `hostnames` | `textarea` | Hostnames of the asset |
+| Id | `tio_id` | `textarea` | Tenable.io asset uuid (hyperlink to the Tenable.io page) |
 | Interfaces | `interfaces` | `textarea` | IP address(es) of the asset |
+| Hostnames | `hostnames` | `textarea` | Hostnames of the asset |
+| Severities  | `severities`    | `textarea` | Tenable.io vulnerability count per severity              |
 | Last seen | `last_seen` | `text` | Date and time when the asset is last seen |
-| Severities | `severities` | `textarea` | Tenable.io vulnerability count per severity |
-| Id | `tio_id` | `textarea` | Tenable.io asset uuid |
+| Agent name  | `agent_name`    | `text`     | Tenable.io agent name                                    |
 
 ---
 
@@ -177,9 +177,9 @@ tenable_io_assets
 ## Rules
 | Rule Name | Object | Workflow Triggered |
 | --------- | ------ | ------------------ |
-| Example: Launch Tenable.io Scan | incident | `example_launch_tenable_io_scan` |
 | Example: Search Tenable.io Assets | incident | `example_search_tenable_io_assets` |
 | Example: Search Tenable.io Assets by IP | artifact | `example_search_tenable_io_assets_by_ip` |
+| Example: Launch Tenable.io Scan | incident | `example_launch_tenable_io_scan` |
 | Example: Launch Tenable.io Scan by IP | artifact | `example_launch_tenable_io_scan_by_ip` |
 
 ---
