@@ -5,7 +5,7 @@
 import logging
 from resilient_circuits import ResilientComponent, function, handler, StatusMessage, FunctionResult, FunctionError
 from resilient_lib import RequestsCommon
-from fn_tenable_io_assets.util.tenable_io import call_tenable_io
+from fn_tenable_io_assets.util.tenable_io_lib import call_tenable_io
 from pprint import pformat
 
 PACKAGE_NAME = "fn_tenable_io_assets"
@@ -32,15 +32,11 @@ class FunctionComponent(ResilientComponent):
         in:
             tio_operation_type: 'search', 'scan', 'scan_status'
             tio_ip_addr: an IP address or comma separated addresses
-            tio_severity: comma separated list of [ None, Low, Medium, High, Critical ] combination
+            tio_severity: comma separated list of Info, Low, Medium, High, Critical combination
             tio_asset_age: asset age in days to retrieve
             tio_scan_name: scan name to override the default scan name in app.config
-        out: results dict
-            state: Success, Failed
-            reason: Failed reason
-            content: Reformatted Tenable.io Asset array of dict:
-                Asset Keys = [ 'id', 'asset_url', 'interfaces', 'hostnames', 'severities',
-                'last_seen', 'agent_name' ]
+        out: results dict.
+            See ../util/tenable_io.py for more detail
         """
         try:
             # Get the wf_instance_id of the workflow this Function was called in
@@ -78,9 +74,12 @@ class FunctionComponent(ResilientComponent):
             yield StatusMessage("Finished 'tenable_io_assets' that was running in workflow '{0}'".format(wf_instance_id))
 
             if results.get('state') != 'Success':
-                raise ConnectionError("Tenable.io Assets could not be retrieved: {0}".format(results.get('reason')))
+                raise ConnectionError("Tenable.io Error: {0}".format(results.get('reason')))
             else:
-                yield StatusMessage("{0} assets were returned from Tenable.io".format(results.get('size')))
+                if tio_operation_type.lower() == 'search':
+                    yield StatusMessage("{0} assets were returned from Tenable.io".format(results.get('size')))
+                else:
+                    yield StatusMessage("Tenable.io operation: {0}".format(pformat(results)))
 
             # Produce a FunctionResult with the results
             yield FunctionResult(results)
