@@ -15,7 +15,7 @@
   * IP Addresses (comma separated list, or a single value)
   * Severities (comma separated list of `Info`, `Low`, `Medium`, `High`, `Critical` combination)
 
-  Returned values are stored in the [Data Table - Tenable.io Assets]()
+  Returned values are stored in the [Data Table - Tenable.io Assets](#data-table---tenableio-assets)
 
 * Launch pre-defined **Tenable.io scan** from the incident **Action** menu:
 
