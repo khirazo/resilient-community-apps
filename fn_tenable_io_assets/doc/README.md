@@ -15,11 +15,7 @@
   * IP Addresses (comma separated list, or a single value)
   * Severities (comma separated list of `Info`, `Low`, `Medium`, `High`, `Critical` combination)
 
-<<<<<<< HEAD
   Returned values are stored in the [Data Table - Tenable.io Assets](#data-table---tenableio-assets)
-=======
-  Returned values are stored in a table
->>>>>>> parent of 7f5b61b... Update README.md
 
 * Launch pre-defined **Tenable.io scan** from the incident **Action** menu:
 
@@ -45,13 +41,13 @@ Function for multiple operations:
 
 | Name | Type | Note |
 | ---- | :--: | ------- |
-| `artifact_id` | `number` | Set the correct value gotten from the Resilient. Only needed when you invoke the function from the Artifact `︙` menu |
 | `incident_id` | `number` | Set the correct value gotten from the Resilient |
-| `tio_asset_age` | `number` | Asset age in days to retrieve |
-| `tio_ip_addr` | `text` | An IP address or comma separated addresses |
+| `artifact_id` | `number` | Set the correct value gotten from the Resilient. Only needed when you invoke the function from the Artifact `︙` menu |
 | `tio_operation_type` | `text` | Tenable.io Operation such as `search` and `scan`. |
-| `tio_scan_name` | `text` | Scan name to override the default scan name in `app.config` |
+| `tio_ip_addr` | `text` | An IP address or comma separated addresses |
 | `tio_severity` | `text` | Comma separated list of `Info`, `Low`, `Medium`, `High`, `Critical` combination |
+| `tio_asset_age` | `number` | Asset age in days to retrieve |
+| `tio_scan_name` | `text` | Scan name to override the default scan name in `app.config` |
 
 </p>
 </details>
@@ -167,12 +163,12 @@ tenable_io_assets
 #### Columns:
 | Column Name | API Access Name | Type | Tooltip |
 | ----------- | --------------- | ---- | ------- |
-| Agent name | `agent_name` | `text` | Tenable.io agent name |
-| Hostnames | `hostnames` | `textarea` | Hostnames of the asset |
-| Interfaces | `interfaces` | `textarea` | IP address(es) of the asset |
-| Last seen | `last_seen` | `text` | Date and time when the asset is last seen |
-| Severities | `severities` | `textarea` | Tenable.io vulnerability count per severity |
 | Id | `tio_id` | `textarea` | Tenable.io asset uuid |
+| Interfaces | `interfaces` | `textarea` | IP address(es) of the asset |
+| Hostnames | `hostnames` | `textarea` | Hostnames of the asset |
+| Severities | `severities` | `textarea` | Tenable.io vulnerability count per severity |
+| Last seen | `last_seen` | `text` | Date and time when the asset is last seen |
+| Agent name | `agent_name` | `text` | Tenable.io agent name |
 
 ---
 
@@ -181,9 +177,9 @@ tenable_io_assets
 ## Rules
 | Rule Name | Object | Workflow Triggered |
 | --------- | ------ | ------------------ |
-| Example: Launch Tenable.io Scan | incident | `example_launch_tenable_io_scan` |
 | Example: Search Tenable.io Assets | incident | `example_search_tenable_io_assets` |
 | Example: Search Tenable.io Assets by IP | artifact | `example_search_tenable_io_assets_by_ip` |
+| Example: Launch Tenable.io Scan | incident | `example_launch_tenable_io_scan` |
 | Example: Launch Tenable.io Scan by IP | artifact | `example_launch_tenable_io_scan_by_ip` |
 
 ---
